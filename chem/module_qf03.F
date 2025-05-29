@@ -47,7 +47,7 @@ MODULE qf03
   subroutine qf03_driver ( nmx, idst, g, rhop, rho, dt, &
                     ustar, w, cf, ust_min, imod, dz_lowest, &
                     soilc, tot_soilc, domsoilc,    &
-                    tc, bems, rough_cor_in, smois_cor_in, wr, &
+                    tc, bems, rough_cor_in, smois_cor_in, wr, emis_weight, &
                     d0, dd, psd_m, dpsd_m, ppsd_m, psd_f, dpsd_f, ppsd_f, imax, stype)
        
        INTEGER, INTENT(IN   )                   :: nmx, imod, idst
@@ -58,6 +58,7 @@ MODULE qf03
        REAL   , INTENT(INOUT), DIMENSION(nmx)   :: tc
        REAL   , INTENT(  OUT), DIMENSION(nmx)   :: bems
        REAL   , INTENT(IN   ), DIMENSION(12)    :: wr
+       REAL   , INTENT(IN   )                   :: emis_weight
 
 !kang [2009/01/07] soil class type
        REAL, INTENT(IN   )                      :: tot_soilc       
@@ -355,6 +356,8 @@ MODULE qf03
       
       do n = 1, nbins
 ! fbin : [kg/m2/s],  dz_lowest : [m],  rho : [kg/m3],  dt : [s] -> tc : [kg/kg-dryair]
+         ! Apply emission weight
+         cell_fbin(n) = cell_fbin(n) * emis_weight
          tc(n) = tc(n) + cell_fbin(n)/dz_lowest/rho*dt     ! (kg/kg)
          bems(n) = cell_fbin(n)*dt      ! diagnostic (kg/m2) per dt
       enddo

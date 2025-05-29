@@ -822,7 +822,7 @@
               config_flags,                                                                &
               grid%gmt,ijulian,rri,t_phy,moist,p8w,t8w,u_phy,v_phy,vvel,               &
               grid%e_bio,p_phy,chem,rho,dz8w,grid%ne_area,emis_ant,emis_vol,grid%tsk,      &
-              grid%erod,grid%erod_dri,grid%lai_vegmask,                                    &
+              grid%erod,grid%erod_dri,grid%lai_vegmask, grid%dust_emis_weight,             &
               g,emis_seas,emis_dust,tracer,                                                &
               emis_seas2,      &
               ebu, ebu_in,grid%mean_fct_agtf,grid%mean_fct_agef,grid%mean_fct_agsv,       &

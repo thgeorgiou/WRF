@@ -18,7 +18,7 @@ CONTAINS
          bioemdt,stepbioe,                                                 &
          config_flags,gmt,julday,alt,t_phy,moist,p8w,t8w,u_phy,            &
          v_phy,vvel,e_bio,p_phy,chem,rho_phy,dz8w,ne_area,emis_ant,        &
-         emis_vol,tsk,erod,erod_dri,lai_vegmask,                           &
+         emis_vol,tsk,erod,erod_dri,lai_vegmask, dust_emission_weight,     &
          g,emis_seas,emis_dust,tracer,                                     &
          emis_seas2,                                                       &
          ebu, ebu_in,mean_fct_agtf,mean_fct_agef,                          &
@@ -149,7 +149,7 @@ CONTAINS
          erod, erod_dri
    REAL, DIMENSION( ims:ime, jms:jme), &
          INTENT(IN ) ::                                                    &
-         lai_vegmask
+         lai_vegmask, dust_emission_weight
    REAL, DIMENSION( ims:ime, jms:jme,5),&
          INTENT(INOUT ) ::                                                 &
          dustin,seasin
@@ -805,8 +805,8 @@ real, save :: freq_industry(24)    = &
         imod = 2
        END SELECT scheme_select
        call uoc_dust_driver (dtstep,config_flags,                     &
-         chem,rho_phy,dz8w,smois,ust, isltyp,vegfra,g,emis_dust,           &
-         ust_t, imod, rough_cor, smois_cor, soil_top_cat, erod,            &
+         chem,rho_phy,dz8w,smois,ust, isltyp,vegfra, dust_emission_weight,g,emis_dust,           &
+         ust_t, imod, rough_cor, smois_cor, soil_top_cat, erod,&
          ids,ide, jds,jde, kds,kde,                                        &
          ims,ime, jms,jme, kms,kme,                                        &
          its,ite, jts,jte, kts,kte                                         )             

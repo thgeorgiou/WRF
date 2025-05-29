@@ -1347,6 +1347,9 @@ integer::oops1,oops2
                                        ids , ide , jds , jde , kds , kde , &
                                        ims , ime , jms , jme , kms , kme , &
                                        its , ite , jts , jte , kts , kte )
+
+         ! Fill the dust emission weight field with a default value of 1.0
+         grid%dust_emis_weight(:,:) = 1.0
 #endif
 
          !  Get the min/max of each i,j for the monthly green-ness fraction.

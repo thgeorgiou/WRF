@@ -22,7 +22,7 @@ MODULE uoc_dust
   CONTAINS
   subroutine uoc_dust_driver(dt,config_flags,                         &
          chem,rho_phy,dz8w,smois,ust,                                      &
-         isltyp,vegfra,g,emis_dust,                                        &
+         isltyp,vegfra,dust_emiss_weight,g,emis_dust,                      &
          ust_t_min, imod, rough_cor, smois_cor,                            &
          soil_top_cat, erod,                                               &
          ids,ide, jds,jde, kds,kde,                                        &
@@ -50,7 +50,7 @@ MODULE uoc_dust
 ! ust_t_min is calculated value from qf03
    REAL,  DIMENSION( ims:ime , jms:jme ) ,                                 &
           INTENT(INOUT) ::                           ust_t_min,            &
-                                                     rough_cor,            &   
+                                                     rough_cor,            &
                                                      smois_cor
    REAL, DIMENSION( ims:ime, kms:kme, jms:jme, num_chem ),                 &
          INTENT(INOUT ) ::                                   chem
@@ -60,7 +60,8 @@ MODULE uoc_dust
          INTENT(INOUT) ::                               smois
    REAL,  DIMENSION( ims:ime , jms:jme )  ,                                &
           INTENT(IN   ) ::                            ust,                 &
-                                                      vegfra
+                                                      vegfra,              &
+                                                      dust_emiss_weight
    REAL,  DIMENSION( ims:ime , kms:kme , jms:jme ),                        &
           INTENT(IN   ) ::                           dz8w,                 &
                                                      rho_phy         
@@ -229,7 +230,7 @@ MODULE uoc_dust
          call qf03_driver( nmx, idst, g, rhop, airden, dt,        &
                   ust_grid, gwet, cf, ust_min, imod, dz_lowest, &
                   soilc, tot_soilc, domsoilc,                   &
-                  tc, bems, rough_cor_in, smois_cor_in, DRYSMC(1:12),    & 
+                  tc, bems, rough_cor_in, smois_cor_in, DRYSMC(1:12), dust_emiss_weight(i,j),   & 
                   d0, dd, psd_m, dpsd_m, ppsd_m, psd_f, dpsd_f, ppsd_f, imax, stype)
                   
 !                   
