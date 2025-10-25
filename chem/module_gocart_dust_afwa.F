@@ -15,7 +15,7 @@ MODULE GOCART_DUST_AFWA
 
 CONTAINS
   SUBROUTINE gocart_dust_afwa_driver(dt,config_flags,alt,  &
-         chem,rho_phy,smois,u10,v10,dz8w,erod,erod_dri,dustin,snowh,   &
+         chem,rho_phy,smois,u10,v10,dz8w,erod,erod_dri,dustin,snowh,dust_emission_weight,   &
          isltyp,vegfra,lai_vegmask,xland,g,emis_dust,      &
          ust,znt,clay_wrf,sand_wrf,clay_nga,sand_nga,afwa_dustloft,                 &
          tot_dust,tot_edust,vis_dust,alpha,gamma,smtune,ustune,            &
@@ -57,7 +57,8 @@ CONTAINS
                                                      sand_wrf,             &
                                                      clay_nga,             &
                                                      sand_nga,             &
-                                                     snowh
+                                                     snowh,                &
+                                                     dust_emission_weight
    REAL, DIMENSION( ims:ime , kms:kme , jms:jme )   ,                      &
          INTENT(IN   ) ::                            alt,                  &
                                                      dz8w,                 &
@@ -287,7 +288,7 @@ CONTAINS
       ! Call dust emission routine.
 
       call source_dust(imx, jmx, lmx, nmx, smx, dt, tc, ustar, massfrac, &
-                       erodtot, ilwi, gravsm, volsm, airden,dz_lowest,   &
+                       erodtot, ilwi, gravsm, volsm, airden, dust_emission_weight(i, j), dz_lowest,   &
                        bems, ustart, g, drylimit, alpha, gamma, smois_opt)
 
       IF(config_flags%chem_opt == 2 .or. config_flags%chem_opt == 11 ) then
@@ -371,7 +372,7 @@ CONTAINS
   END SUBROUTINE gocart_dust_afwa_driver
 
   SUBROUTINE source_dust(imx, jmx, lmx, nmx, smx, dt1, tc, ustar, massfrac,&
-                         erod, ilwi, gravsm, volsm, airden, dz_lowest,     &
+                         erod, ilwi, gravsm, volsm, airden, dust_emission_weight, dz_lowest,     &
                          bems, ustart, g0, drylimit, alpha, gamma, smois_opt)
 
   ! ****************************************************************************
@@ -447,6 +448,7 @@ CONTAINS
   REAL*8, INTENT(IN)    :: gravsm(imx,jmx)
   REAL*8, INTENT(IN)    :: drylimit(imx,jmx) 
   REAL*8, INTENT(IN)    :: airden(imx,jmx,lmx)
+  REAL, INTENT(IN)    :: dust_emission_weight
   REAL*8, INTENT(INOUT) :: tc(imx,jmx,lmx,nmx)
   REAL*8, INTENT(OUT)   :: bems(imx,jmx,nmx) 
   REAL, INTENT(IN)    :: g0,dt1
@@ -643,6 +645,7 @@ CONTAINS
         ! Calculate total mass emitted
 
         dsrc = emit*distr_dust(n)*dt1  ! (kg m^-2) per dt1
+        dsrc = dsrc*dust_emission_weight  ! Apply emission weighting factor
         IF (dsrc < 0.0) dsrc = 0.0
 
         ! Update dust mixing ratio at first model level.
